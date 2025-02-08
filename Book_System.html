@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Management</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <form id="bookCount">
+        <h1>Book Management System</h1>
+        <label><strong>Please Enter Number of Books: </strong></label>
+        <input type="number" id="bookCountInput" required><br>
+        <span id="countError" style="display:none;"></span>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="bookForm" style="display: none;">
+        <form id="createBookForm">
+            <h2>Enter Book Details</h2>
+
+            <label for="bookName">Book Name:</label>
+            <input type="text" id="bookName" required>
+            <span id="nameError" style="display:none;"></span>
+
+            <label for="bookPrice">Book Price:</label>
+            <input type="number" id="bookPrice" required>
+            <span id="priceError" style="display:none;"></span>
+
+            <label for="authorName">Author Name:</label>
+            <input type="text" id="authorName" required>
+            <span id="authorError" style="display:none;"></span>
+
+            <label for="authorEmail">Author Email:</label>
+            <input type="email" id="authorEmail" required>
+            <span id="emailError" style="display:none;"></span>
+
+            <button type="button" class="add-btn" onclick="addBook()">Add</button>
+            <button type="button" class="reset-btn" onclick="resetForm()">Reset</button>
+
+        </form>
+    </div>
+    <div class="divy" id="booksSection">
+        <h2 id="booksListTitle" style="display: none;">Books List</h2>
+        <table id="booksTable">
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Price</th>
+                    <th>Author Name</th>
+                    <th>Author Email</th>
+                    <th>Actions</th> <!-- Added Actions Column -->
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table><br>
+        <button id="addNewBookBtn" onclick="addNewRow()">Add_New_Book</button>
+        <button id="deleteAllBtn" onclick="deleteAllRows()">Delete_All</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

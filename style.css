@@ -1,0 +1,145 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    padding: 0;
+    margin: 0;
+    background-image: url('lib_img.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1,
+h2 {
+    margin-bottom: 20px;
+    color: #000000;
+    font-weight: 600;
+}
+
+form {
+    position: relative;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: #495057;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1b306;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+input:focus {
+    background-color: #e6f7ff;
+    border-color: #007bff;
+    outline: none;
+}
+
+span {
+    color: red;
+    font-size: 15px;
+    display: none;
+    margin-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+button {
+    padding: 12px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    background-color: #833f00;
+}
+
+.divy {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    margin: 0 auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: #000000;
+    margin-top: 20px;
+    background: white;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #833f00;
+    color: white;
+}
+
+tbody tr:nth-child(even) {
+    background: #f8e8d0d8;
+}
+
+tbody tr:hover {
+    background: #e2e6ea;
+    transition: 0.3s;
+}
+
+button.edit-btn,
+button.delete-btn {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    width: 75px;
+    height: 30px;
+}
+
+button.edit-btn {
+    background-color: #833f00;
+}
+
+button.delete-btn {
+    background-color: #b9313f;
+}
+
+button.edit-btn:hover,
+button.delete-btn:hover {
+    opacity: 0.8;
+}
+
+#addNewBookBtn, #deleteAllBtn {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    width: 120px;
+    height: 35px;
+}
