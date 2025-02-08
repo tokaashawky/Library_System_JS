@@ -1,4 +1,5 @@
 let totalBooks = 0, addedBooks = 0, books = [];
+
 document.getElementById("bookCount").addEventListener("submit", function (event) {
     event.preventDefault();
     let count = parseInt(document.getElementById("bookCountInput").value);
@@ -13,8 +14,8 @@ document.getElementById("bookCount").addEventListener("submit", function (event)
         document.getElementById("bookForm").style.display = "block";
     }
 });
-//----------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------
+
+
 function validateInput(id, errorId, regex, errorMessage) {
     let input = document.getElementById(id);
     let error = document.getElementById(errorId);
@@ -33,16 +34,13 @@ function validateInput(id, errorId, regex, errorMessage) {
     error.style.display = isValid ? "none" : "block";
     input.dataset.valid = isValid ? "true" : "false";
 }
-//----------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------
+
 function addBook() {
     let isValid = true;
-    validateInput("bookName", "nameError", /^(?!\d+$)[a-zA-Z0-9\s]+$/,
-        "Only letters, numbers, and spaces allowed, but cannot be numbers only.");
-    validateInput("bookPrice", "priceError", /^[1-9][0-9]{1,}$/, "Enter a valid positive number.");
+    validateInput("bookName", "nameError", /^(?!\d+$)[a-zA-Z0-9\s]+$/, "Only letters, numbers, and spaces allowed, but cannot be numbers only.");
+    validateInput("bookPrice", "priceError", /^[1-9][0-9]{1,}$/, "Enter a valid positive number more than 10 .");
     validateInput("authorName", "authorError", /^[a-zA-Z\s]+$/, "Only letters and spaces allowed.");
-    validateInput("authorEmail", "emailError", /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        "Enter a valid email (like: a@b.c)");
+    validateInput("authorEmail", "emailError", /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Enter a valid email (like: a@b.c)");
 
     document.querySelectorAll('input').forEach(input => {
         if (input.dataset.valid === "false")
@@ -68,8 +66,7 @@ function addBook() {
         }
     }
 }
-//----------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------
+
 function displayBooks() {
     let tbody = document.querySelector("#booksTable tbody");
     tbody.innerHTML = "";
@@ -88,15 +85,21 @@ function displayBooks() {
     // Disable inputs after rendering
     document.querySelectorAll('.editable').forEach(input => input.disabled = true);
 }
-//----------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------
+
+let currentlyEditingIndex = -1; // Track which row is being edited
+
 function editRow(index) {
+    if (currentlyEditingIndex !== -1 && currentlyEditingIndex !== index) {
+        alert("Please save or cancel the current edit before editing another row.");
+        return;
+    }
+
     let row = document.querySelectorAll("#booksTable tbody tr")[index];
     let inputs = row.querySelectorAll('.editable');
     let editBtn = row.querySelector('.edit-btn');
     let deleteBtn = row.querySelector('.delete-btn');
 
-    // Enable inputs for editing in the current row
+    // Enable inputs for editing
     inputs.forEach(input => {
         input.disabled = false;
         if (!input.nextElementSibling || input.nextElementSibling.tagName !== "SPAN") {
@@ -108,25 +111,15 @@ function editRow(index) {
         }
     });
 
-    // Change buttons to "Confirm" and "Cancel" only for the current row
+    // Change buttons to "Confirm" and "Cancel"
     editBtn.textContent = "Confirm";
     deleteBtn.textContent = "Cancel";
     editBtn.setAttribute("onclick", `confirmEdit(${index})`);
     deleteBtn.setAttribute("onclick", `cancelEdit(${index})`);
 
-    // Remove the current action buttons (edit, delete)
-    editBtn.style.display = "none";
-    deleteBtn.style.display = "none";
-
-    // Add Confirm and Cancel buttons to the row
-    let actionCell = row.querySelector('td:last-child');
-    actionCell.innerHTML = `
-        <button class="confirm-btn" onclick="confirmEdit(${index})">Confirm</button>
-        <button class="cancel-btn" onclick="cancelEdit(${index})">Cancel</button>
-    `;
+    currentlyEditingIndex = index; // Track the editing row
 }
-//----------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------
+
 function confirmEdit(index) {
     let row = document.querySelectorAll("#booksTable tbody tr")[index];
     let inputs = row.querySelectorAll('.editable');
@@ -144,10 +137,10 @@ function confirmEdit(index) {
             errorMessage = "Only letters, numbers, and spaces allowed, but cannot be numbers only.";
         } else if (field === "price") {
             regex = /^[1-9][0-9]{1,}$/;
-            errorMessage = "Enter a valid positive number.";
+            errorMessage = "Enter a valid positive number more than 10";
         } else if (field === "author") {
             regex = /^[a-zA-Z\s]+$/;
-            errorMessage = "Only letters and spaces allowed to entered.";
+            errorMessage = "Only letters and spaces allowed.";
         } else if (field === "email") {
             regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             errorMessage = "Enter a valid email (like: a@b.c)";
@@ -166,62 +159,42 @@ function confirmEdit(index) {
     });
 
     if (isValid) {
-        // Update the book details for the current row
         inputs.forEach(input => {
             let field = input.getAttribute("data-field");
             book[field] = input.value;
             input.style.border = ""; // Reset border
         });
-
-        // Reset action buttons to default (Edit and Delete) for the current row
-        let actionCell = row.querySelector('td:last-child');
-        actionCell.innerHTML = `
-            <button class="edit-btn" onclick="editRow(${index})">Edit</button>
-            <button class="delete-btn" onclick="deleteRow(${index})">Delete</button>
-        `;
+        displayBooks();
+        currentlyEditingIndex = -1; 
     }
 }
-//----------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------
+
 function cancelEdit(index) {
-    let row = document.querySelectorAll("#booksTable tbody tr")[index];
-
-    // Reset the values of the inputs to their original state
-    let inputs = row.querySelectorAll('.editable');
-    inputs.forEach(input => {
-        input.value = books[index][input.getAttribute("data-field")]; // Restore original value
-        input.style.border = ""; // Reset border
-    });
-
-    // Reset action buttons to default (Edit and Delete)
-    let actionCell = row.querySelector('td:last-child');
-    actionCell.innerHTML = `
-        <button class="edit-btn" onclick="editRow(${index})">Edit</button>
-        <button class="delete-btn" onclick="deleteRow(${index})">Delete</button>
-    `;
-}
-//----------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------
-function deleteRow(index) {
-    books.splice(index, 1);
     displayBooks();
+    currentlyEditingIndex = -1; 
 }
-//----------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------
+
+
+function deleteRow(index) {
+    let confirmDelete = confirm("Are you sure you want to delete this book?");
+    if (confirmDelete) {
+        books.splice(index, 1);
+        displayBooks();
+    }
+}
+
 function resetForm() {
     document.getElementById("createBookForm").reset();
     document.querySelectorAll('span').forEach(span => span.style.display = 'none');
 }
-//----------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------
 function addNewRow() {
     let tbody = document.querySelector("#booksTable tbody");
 
     // If the table is empty, add a new row without any checks
     if (tbody.rows.length === 0) {
         let row = tbody.insertRow();
-        row.innerHTML =
-            `<td><input type="text" class="editable" data-field="name" placeholder="Book Name"></td>
+        row.innerHTML = `
+            <td><input type="text" class="editable" data-field="name" placeholder="Book Name"></td>
             <td><input type="number" class="editable" data-field="price" placeholder="Book Price"></td>
             <td><input type="text" class="editable" data-field="author" placeholder="Author Name"></td>
             <td><input type="email" class="editable" data-field="email" placeholder="Author Email"></td>
@@ -256,8 +229,8 @@ function addNewRow() {
         } else {
             // Add new row only if the last row is filled
             let row = tbody.insertRow();
-            row.innerHTML =
-                `<td><input type="text" class="editable" data-field="name" placeholder="Book Name"></td>
+            row.innerHTML = `
+                <td><input type="text" class="editable" data-field="name" placeholder="Book Name"></td>
                 <td><input type="number" class="editable" data-field="price" placeholder="Book Price"></td>
                 <td><input type="text" class="editable" data-field="author" placeholder="Author Name"></td>
                 <td><input type="email" class="editable" data-field="email" placeholder="Author Email"></td>
@@ -275,10 +248,10 @@ function addNewRow() {
         }
     }
 }
-//----------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------
+
 function deleteAllRows() {
+    let confirmDelete = confirm("Are you sure you want to delete all the books?");
+    if (confirmDelete) {
     books = []; // Clear the books array
     displayBooks(); // Refresh the table
-}
-
+}}
