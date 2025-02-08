@@ -39,7 +39,7 @@ function addBook() {
     let isValid = true;
     validateInput("bookName", "nameError", /^(?!\d+$)[a-zA-Z0-9\s]+$/,
         "Only letters, numbers, and spaces allowed, but cannot be numbers only.");
-    validateInput("bookPrice", "priceError", /^(?!0$)(\d+(\.\d{1,2})?)$/, "Enter a valid positive number.");
+    validateInput("bookPrice", "priceError", /^[1-9][0-9]{1,}$/, "Enter a valid positive number.");
     validateInput("authorName", "authorError", /^[a-zA-Z\s]+$/, "Only letters and spaces allowed.");
     validateInput("authorEmail", "emailError", /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         "Enter a valid email (like: a@b.c)");
@@ -95,7 +95,8 @@ function editRow(index) {
     let inputs = row.querySelectorAll('.editable');
     let editBtn = row.querySelector('.edit-btn');
     let deleteBtn = row.querySelector('.delete-btn');
-    // Enable inputs for editing
+
+    // Enable inputs for editing in the current row
     inputs.forEach(input => {
         input.disabled = false;
         if (!input.nextElementSibling || input.nextElementSibling.tagName !== "SPAN") {
@@ -106,11 +107,23 @@ function editRow(index) {
             input.parentNode.appendChild(errorSpan);
         }
     });
-    // Change buttons to "Confirm" and "Cancel"
+
+    // Change buttons to "Confirm" and "Cancel" only for the current row
     editBtn.textContent = "Confirm";
     deleteBtn.textContent = "Cancel";
     editBtn.setAttribute("onclick", `confirmEdit(${index})`);
     deleteBtn.setAttribute("onclick", `cancelEdit(${index})`);
+
+    // Remove the current action buttons (edit, delete)
+    editBtn.style.display = "none";
+    deleteBtn.style.display = "none";
+
+    // Add Confirm and Cancel buttons to the row
+    let actionCell = row.querySelector('td:last-child');
+    actionCell.innerHTML = `
+        <button class="confirm-btn" onclick="confirmEdit(${index})">Confirm</button>
+        <button class="cancel-btn" onclick="cancelEdit(${index})">Cancel</button>
+    `;
 }
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------
@@ -130,7 +143,7 @@ function confirmEdit(index) {
             regex = /^(?!\d+$)[a-zA-Z0-9\s]+$/;
             errorMessage = "Only letters, numbers, and spaces allowed, but cannot be numbers only.";
         } else if (field === "price") {
-            regex = /^(?!0$)(\d+(\.\d{1,2})?)$/;
+            regex = /^[1-9][0-9]{1,}$/;
             errorMessage = "Enter a valid positive number.";
         } else if (field === "author") {
             regex = /^[a-zA-Z\s]+$/;
@@ -153,19 +166,39 @@ function confirmEdit(index) {
     });
 
     if (isValid) {
+        // Update the book details for the current row
         inputs.forEach(input => {
             let field = input.getAttribute("data-field");
             book[field] = input.value;
             input.style.border = ""; // Reset border
         });
-        displayBooks();
+
+        // Reset action buttons to default (Edit and Delete) for the current row
+        let actionCell = row.querySelector('td:last-child');
+        actionCell.innerHTML = `
+            <button class="edit-btn" onclick="editRow(${index})">Edit</button>
+            <button class="delete-btn" onclick="deleteRow(${index})">Delete</button>
+        `;
     }
 }
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------
 function cancelEdit(index) {
-    // Simply re-render the table without changes
-    displayBooks();
+    let row = document.querySelectorAll("#booksTable tbody tr")[index];
+
+    // Reset the values of the inputs to their original state
+    let inputs = row.querySelectorAll('.editable');
+    inputs.forEach(input => {
+        input.value = books[index][input.getAttribute("data-field")]; // Restore original value
+        input.style.border = ""; // Reset border
+    });
+
+    // Reset action buttons to default (Edit and Delete)
+    let actionCell = row.querySelector('td:last-child');
+    actionCell.innerHTML = `
+        <button class="edit-btn" onclick="editRow(${index})">Edit</button>
+        <button class="delete-btn" onclick="deleteRow(${index})">Delete</button>
+    `;
 }
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------
