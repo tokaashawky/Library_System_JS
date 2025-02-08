@@ -32,8 +32,7 @@ form {
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px;
+    width: 500px;
     margin-bottom: 20px;
 }
 
@@ -43,17 +42,25 @@ label {
     color: #495057;
 }
 
+#bookCount {
+    background-color: rgb(255, 255, 255);
+}
+
 input {
     width: 100%;
     padding: 10px;
     border: 1px solid #d1b306;
     border-radius: 6px;
     margin-bottom: 10px;
+    /* Increased space to make room for error message */
 }
+
 
 input:focus {
     background-color: #e6f7ff;
+    /* Light blue color on focus */
     border-color: #007bff;
+    /* Highlight input border on focus */
     outline: none;
 }
 
@@ -61,13 +68,16 @@ span {
     color: red;
     font-size: 15px;
     display: none;
+    /* Hidden by default */
     margin-top: 5px;
+    /* Add space between input and error message */
     padding-left: 10px;
+    /* Align with input text */
     padding-bottom: 10px;
 }
 
 button {
-    padding: 12px 20px;
+    padding: 15px;
     margin-right: 10px;
     border: none;
     border-radius: 10px;
@@ -77,7 +87,7 @@ button {
 }
 
 .divy {
-    width: 100%;
+    width: 80%;
     max-width: 800px;
     background: white;
     padding: 20px;
@@ -85,7 +95,28 @@ button {
     border-radius: 10px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     display: none;
+}
+
+.add-btn {
+    background: #833f00;
+}
+
+.reset-btn {
+    background: #b9313f;
+}
+
+.divy {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    padding: 20px;
+    text-align: center;
+    /* Ensures inline elements are centered */
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    display: none;
     margin: 0 auto;
+    /* Centers the divy container */
 }
 
 table {
@@ -94,9 +125,18 @@ table {
     border: #000000;
     margin-top: 20px;
     background: white;
+    margin-left: auto;
+    margin-right: auto;
+    /* Centers the table horizontally */
 }
 
-th, td {
+thead {
+
+    width: auto;
+}
+
+th,
+td {
     padding: 10px;
     text-align: center;
     border-bottom: 1px solid #ddd;
@@ -108,6 +148,7 @@ th {
 }
 
 tbody tr:nth-child(even) {
+
     background: #f8e8d0d8;
 }
 
@@ -117,29 +158,42 @@ tbody tr:hover {
 }
 
 button.edit-btn,
-button.delete-btn {
+button.delete-btn,
+button.confirm-btn,
+button.cancel-btn {
     margin-right: 5px;
     margin-bottom: 5px;
     width: 75px;
     height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-button.edit-btn {
+button.edit-btn,
+button.confirm-btn {
     background-color: #833f00;
 }
 
-button.delete-btn {
+button.delete-btn,
+button.cancel-btn {
     background-color: #b9313f;
 }
 
 button.edit-btn:hover,
-button.delete-btn:hover {
+button.delete-btn:hover,
+button.confirm-btn:hover,
+button.cancel-btn:hover {
     opacity: 0.8;
 }
 
-#addNewBookBtn, #deleteAllBtn {
+#addNewBookBtn,
+#deleteAllBtn {
     margin-right: 5px;
     margin-bottom: 5px;
     width: 120px;
     height: 35px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
